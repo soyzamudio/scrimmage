@@ -9,9 +9,9 @@ angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova'])
   .state('root', { url: '', controller: 'RootCtrl', data: { authenticate: false }})
   .state('login', { url: '/login', templateUrl: '../templates/login/login.html', controller: 'LoginCtrl', data: { authenticate: false }})
 
-  // .state('setting', { url: '/settings', templateUrl: '../templates/settings/settings.html', abstract: true, data: { authenticate: true }})
-  // .state('settings.account', { url: '/account', templateUrl: '../templates/settings/account.html', controller: 'SettingsCtrl', data: { authenticate: true }})
-  // .state('settings.edit', { url: '/edit', templateUrl: '../templates/settings/edit.html', controller: 'SettingsEditCtrl', data: { authenticate: true }})
+  .state('setting', { url: '/settings', templateUrl: '../templates/settings/settings.html', abstract: true, data: { authenticate: true }})
+  .state('settings.account', { url: '/account', templateUrl: '../templates/settings/settings-account.html', controller: 'SettingsAccountCtrl', data: { authenticate: true }})
+  .state('settings.edit', { url: '/edit', templateUrl: '../templates/settings/settings-edit.html', controller: 'SettingsEditCtrl', data: { authenticate: true }})
 
   .state('games', { url: '/games', templateUrl: '../templates/games/games.html', abstract: true, data: { authenticate: true }})
   .state('games.list', { url: '/list', templateUrl: '../templates/games/games-list.html', controller: 'GamesListCtrl', data: { authenticate: true }})
