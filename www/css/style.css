@@ -1,0 +1,60 @@
+/* Navbar styling... */
+
+.bar-scrimmage {
+  font-family: "MoonBold";
+  border-color: #222;
+  background-color: #222;
+  background-image: linear-gradient(0deg, #222, #222 50%, transparent 50%);
+  color: #f1f1f1;
+}
+
+.view-title {
+  font-family: "MoonBold";
+  color: #f1f1f1;
+}
+
+/* Dark background */
+
+.view-dark {
+  background: #222;
+  color: #f1f1f1;
+}
+
+/* Button styling... */
+
+.button {
+  font-family: "MoonBold";
+  font-size: 1.2em;
+  padding-top: 2px;
+  border-radius: 0px;
+}
+
+.button-facebook.activated {
+  background-color: #224776;
+}
+
+.button-twitter.activated {
+  background-color: #00a3c4;
+}
+
+.button-facebook {
+  border-color: #32568F;
+  background-color: #32568F;
+  color: #f1f1f1;
+}
+
+.button-facebook:hover {
+  background-color: #224776;
+  color: #f9f9f9
+}
+
+.button-twitter {
+  border-color: #00B8EC;
+  background-color: #00B8EC;
+  color: #f1f1f1;
+}
+
+.button-twitter:hover {
+  background-color: #00a3c4;
+  color: #f9f9f9
+}
