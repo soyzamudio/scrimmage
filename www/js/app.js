@@ -16,7 +16,7 @@ angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova'])
   .state('games', { url: '/games', templateUrl: '../templates/games/games.html', abstract: true, data: { authenticate: true }})
   .state('games.create', { url: '/create', templateUrl: '../templates/games/games-create.html', controller: 'GamesCreateCtrl'})
   .state('games.list', { url: '/list', templateUrl: '../templates/games/games-list.html', controller: 'GamesListCtrl'})
-  .state('games.show', { url: '/show/{gameId}', templateUrl: '../templates/games/games-show.html', controller: 'GamesShowCtrl'})
+  .state('games.show', { url: '/{gameId}', templateUrl: '../templates/games/games-show.html', controller: 'GamesShowCtrl'})
 
   .state('users', { url: '/users/', templateUrl: '../templates/users/users.html', abstract: true, data: { authenticate: true }})
   .state('users.ranking', {url: '/ranking', templateUrl: '../templates/users/users-ranking.html', controller: 'UsersRankingCtrl'})

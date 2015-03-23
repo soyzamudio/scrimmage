@@ -1,4 +1,4 @@
-<ion-view class='view-dark' view-title="scrimmagr">
+<ion-view class='view-dark'>
 
   <ion-header-bar class="bar-scrimmage">
     <div class="buttons">
@@ -6,11 +6,16 @@
     </div>
     <h1 class="title view-title">scrimmagr</h1>
     <div class="buttons">
+      <a style="color: white;" class="button button-icon icon ion-trophy" ng-click='ranking()'></a>
       <a style="color: white;" class="button button-icon icon ion-ios-plus-empty" ng-click='goToCreate()'></a>
     </div>
   </ion-header-bar>
 
   <ion-content class='padding'>
-    <button class="button button-block button-calm" ng-click='ranking()'>Ranking</button>
+    <ul class="list" ng-repeat='game in games'>
+      <li class="item" ng-click='goToGame(game.id)'>
+        {{game.attributes.nameLocation}}
+      </li>
+    </ul>
   </ion-content>
 </ion-view>

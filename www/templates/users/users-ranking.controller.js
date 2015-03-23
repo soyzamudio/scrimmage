@@ -5,10 +5,9 @@ angular.module('scrimmagr')
   var query = new Parse.Query(Parse.User);
   query.limit(10);
   query.descending('gPoints');
-  query.find({
-    success: function(users) {
-      $scope.users = users;
-    }
+  query.find()
+  .then(function(users) {
+    $scope.users = users;
   });
 
   $scope.goBack = function() {
