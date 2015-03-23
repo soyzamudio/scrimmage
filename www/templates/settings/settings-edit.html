@@ -1,0 +1,25 @@
+<ion-view class='view-dark' view-title='schedule it'>
+
+  <ion-header-bar class="bar-scrimmage">
+    <div class="buttons">
+      <a style="color: white;" class="button button-icon icon ion-ios-close-empty" ng-click='goBack()'></a>
+    </div>
+    <h1 class="title view-title">edit account</h1>
+    <div class="buttons">
+      <a style="color: white;" class="button button-icon icon ion-ios-checkmark-empty" ng-click='updateUser()'></a>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+  <div class="list">
+    <label class="item item-input">
+      <span class="input-label">Name</span>
+      <input type="text" ng-model='user.name'>
+    </label>
+    <label class="item item-input">
+      <span class="input-label">Email</span>
+      <input type="email" ng-model='user.email'>
+    </label>
+  </div>
+  </ion-content>
+</ion-view>

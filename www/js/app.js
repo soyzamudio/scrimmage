@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova'])
-.config(function($stateProvider, $urlRouterProvider) {
+.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
   $stateProvider
   .state('root', { url: '', controller: 'RootCtrl', data: { authenticate: false }})
   .state('login', { url: '/login', templateUrl: '../templates/login/login.html', controller: 'LoginCtrl', data: { authenticate: false }})
@@ -14,12 +14,13 @@ angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova'])
   .state('settings.edit', { url: '/edit', templateUrl: '../templates/settings/settings-edit.html', controller: 'SettingsEditCtrl'})
 
   .state('games', { url: '/games', templateUrl: '../templates/games/games.html', abstract: true, data: { authenticate: true }})
+  .state('games.create', { url: '/create', templateUrl: '../templates/games/games-create.html', controller: 'GamesCreateCtrl'})
   .state('games.list', { url: '/list', templateUrl: '../templates/games/games-list.html', controller: 'GamesListCtrl'})
   .state('games.show', { url: '/show/{gameId}', templateUrl: '../templates/games/games-show.html', controller: 'GamesShowCtrl'});
 
   $urlRouterProvider.otherwise('/login');
-})
-.run(function($ionicPlatform, $rootScope, $state, $cordovaStatusbar) {
+}])
+.run(['$ionicPlatform', '$rootScope', '$state', '$cordovaStatusbar', function($ionicPlatform, $rootScope, $state, $cordovaStatusbar) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -40,7 +41,7 @@ angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova'])
           event.preventDefault();
         }
   });
-})
+}])
 .controller('RootCtrl', ['$state', function($state) {
     $state.go('games.list');
 }]);

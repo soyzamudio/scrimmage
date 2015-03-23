@@ -1,3 +1,7 @@
+body {
+  font-family: "MoonBold";
+}
+
 /* Navbar styling... */
 
 .bar-scrimmage {
@@ -18,6 +22,43 @@
 .view-dark {
   background: #222;
   color: #f1f1f1;
+}
+
+.divider-dark {
+  background: #222;
+  border: none;
+  color: #c4c4c4;
+}
+
+/* Toggle styling */
+
+.toggle.toggle-facebook input:checked + .track {
+  border-color: #32568F;
+  background-color: #32568F;
+}
+
+.toggle.toggle-twitter input:checked + .track {
+  border-color: #00B8EC;
+  background-color: #00B8EC;
+}
+
+.toggle.toggle-instagram input:checked + .track {
+  border-color: #3f729b;
+  background-color: #3f729b;
+}
+
+/* Colors */
+
+.facebook {
+  color: #32568F;
+}
+
+.twitter {
+  color: #00B8EC;
+}
+
+.instagram {
+  color: #3f729b;
 }
 
 /* Button styling... */
