@@ -19,7 +19,6 @@ angular.module('scrimmagr')
 
     fbLogged.resolve(authData);
     fbLoginSuccess = null;
-    console.log(':22: fbloginsuccess', response);
   };
 
   var fbLoginError = function(error){
@@ -27,7 +26,6 @@ angular.module('scrimmagr')
   };
 
   $scope.login = function() {
-    console.log('Login');
     if (!window.cordova) {
       facebookConnectPlugin.browserInit('727860223998157');
     }
@@ -35,16 +33,13 @@ angular.module('scrimmagr')
     facebookConnectPlugin.login(['public_profile', 'email'], fbLoginSuccess, fbLoginError);
 
     fbLogged.then( function(authData) {
-      console.log('Promised');
       return Parse.FacebookUtils.logIn(authData);
     })
     .then( function(userObject) {
-      console.log(':42:', userObject);
       var authData = userObject.get('authData');
 
       facebookConnectPlugin.api('/me', null,
         function(response) {
-          console.log(':47:', response);
           userObject.set('profilePicture', 'https://graph.facebook.com/' + response.id + '/picture?type=large');
           userObject.set('name', response.name);
           userObject.set('facebook', response.id);
@@ -52,13 +47,11 @@ angular.module('scrimmagr')
           userObject.save();
         },
         function(error) {
-          console.log(error);
         }
       );
 
       $state.go('games.list');
     }, function(error) {
-      console.log(':62: login error', error);
     });
   };
 }]);

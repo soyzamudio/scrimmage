@@ -2,12 +2,9 @@
 
   <ion-header-bar class="bar-scrimmage">
     <div class="buttons">
-      <a style="color: white;" class="button button-icon icon ion-ios-close-empty" ng-click='goBack()'></a>
+      <a style="color: white;" class="button button-icon icon ion-ios-arrow-left" ng-click='goBack()'></a>
     </div>
     <h1 class="title view-title">account</h1>
-    <div class="buttons">
-      <a style="color: white;" class="button button-icon icon ion-ios-checkmark-empty" ng-click='goToCreate()'></a>
-    </div>
   </ion-header-bar>
 
   <ion-content>
@@ -22,9 +19,13 @@
       <div class="item item-divider divider-dark">
         Social
       </div>
-      <ion-toggle toggle-class='toggle-facebook'><i class="icon ion-social-facebook facebook"></i> &nbsp; facebook</ion-toggle>
-      <ion-toggle toggle-class='toggle-twitter'><i class="icon ion-social-twitter twitter"></i> &nbsp; twitter</ion-toggle>
-      <ion-toggle toggle-class='toggle-instagram'><i class="icon ion-social-instagram instagram"></i> &nbsp; instagram</ion-toggle>
+
+      <ion-toggle toggle-class='toggle-facebook' class='item item-icon-left'><i class="icon ion-social-facebook facebook"></i> facebook</ion-toggle>
+      <ion-toggle toggle-class='toggle-twitter' class='item item-icon-left'><i class="icon ion-social-twitter twitter"></i> &nbsp; twitter</ion-toggle>
+      <ion-toggle toggle-class='toggle-instagram' class='item item-icon-left'><i class="icon ion-social-instagram instagram"></i> &nbsp; instagram</ion-toggle>
+
+      <div class="item item-divider divider-dark"></div>
+      <button class="button button-full button-assertive" ng-click='logout()'>Log out</button>
 
     </div>
   </ion-content>

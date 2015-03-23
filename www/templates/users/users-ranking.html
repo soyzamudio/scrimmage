@@ -1,0 +1,17 @@
+<ion-view class='view-dark'>
+  <ion-header-bar class="bar-scrimmage">
+    <div class="buttons">
+      <a style="color: white;" class="button button-icon icon ion-ios-arrow-left" ng-click='goBack()'></a>
+    </div>
+    <h1 class="title view-title">ranking</h1>
+  </ion-header-bar>
+  <ion-content>
+    <div class="list card" ng-repeat='theUser in users'>
+      <div class="item item-avatar" ng-click='goToUser(theUser.id)'>
+        <img ng-src="{{theUser.attributes.profilePicture}}">
+        <h2>{{theUser.attributes.name}} <span style='color: #aeaeae'>({{theUser.attributes.gPoints}} points)</span></h2>
+        <p>{{theUser.attributes.email}}</p>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
