@@ -16,6 +16,7 @@
   },
   "cordovaPlugins": [
     "org.apache.cordova.statusbar",
-    "org.apache.cordova.geolocation"
+    "org.apache.cordova.geolocation",
+    "org.apache.cordova.inappbrowser"
   ]
 }
