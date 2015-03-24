@@ -44,6 +44,7 @@ angular.module('scrimmagr')
           userObject.set('name', response.name);
           userObject.set('facebook', response.id);
           userObject.setEmail(response.email);
+          userObject.set('gPoints', 0);
           userObject.save();
         },
         function(error) {

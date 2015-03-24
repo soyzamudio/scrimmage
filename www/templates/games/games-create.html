@@ -4,28 +4,30 @@
     <div class="buttons">
       <a style="color: white;" class="button button-icon icon ion-ios-close-empty" ng-click='goBack()'></a>
     </div>
-    <h1 class="title view-title">scrimmagr</h1>
+    <h1 class="title view-title">add scrimmage</h1>
     <div class="buttons">
-      <a style="color: white;" class="button button-icon icon ion-ios-checkmark-empty" ng-click='goToCreate()'></a>
+      <a style="color: white;" class="button button-icon icon ion-ios-checkmark-empty" ng-click='submit()'></a>
     </div>
   </ion-header-bar>
 
   <ion-content>
     <div class="list">
+
       <div class="item item-divider divider-dark">
         Location
       </div>
       <label class="item item-input">
-        <input type="text" placeholder="Where are you playing?">
+        <input type="text" placeholder="Where are you playing?" ng-model='search.venue'>
       </label>
+      <a class="item" style='color: #898989' ng-repeat='venue in venues | filter:{ name: search.venue }' ng-if='search.venue' ng-click='selectVenue(venue)'>{{venue.name}} - {{venue.location.distance * 0.00062137 | number:2}} Miles away</a>
 
       <div class="item item-divider divider-dark">
         Time
       </div>
-      <a class="item" style='color: #222' ng-click='editProfile()'>
+      <a class="item" style='color: #222' ng-click='getDate()'>
         Give it a day...
       </a>
-      <a class="item" style='color: #222' ng-click='editProfile()'>
+      <a class="item" style='color: #222' ng-click='getTime()'>
         Give it a time...
       </a>
 
