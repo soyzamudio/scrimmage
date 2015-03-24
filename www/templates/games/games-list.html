@@ -12,10 +12,12 @@
   </ion-header-bar>
 
   <ion-content class='padding'>
-    <ul class="list" ng-repeat='game in games'>
-      <li class="item" ng-click='goToGame(game.id)'>
-        {{game.attributes.nameLocation}}
-      </li>
-    </ul>
+    <div class="list card" ng-repeat='game in games'>
+      <div class="item item-avatar" ng-click='goToGame(game.id)'>
+        <img ng-src="{{game.attributes.creator.attributes.profilePicture}}">
+        <h2>{{game.attributes.nameLocation}}</h2>
+        <p><i class="icon ion-ios-location"></i> 120 km</p>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

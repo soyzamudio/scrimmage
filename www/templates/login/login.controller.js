@@ -1,58 +1,60 @@
 angular.module('scrimmagr')
 .controller('LoginCtrl', ['$scope', '$state', function($scope, $state) {
-  var fbLogged = new Parse.Promise();
-
-  var fbLoginSuccess = function(response) {
-    if (!response.authResponse){
-      fbLoginError("Cannot find the authResponse");
-      return;
-    }
-    var expDate = new Date(
-      new Date().getTime() + response.authResponse.expiresIn * 1000
-    ).toISOString();
-
-    var authData = {
-      id: String(response.authResponse.userID),
-      access_token: response.authResponse.accessToken,
-      expiration_date: expDate
+  $scope.fbLogin = function() {
+    openFB.login(
+      function(response) {
+        if (response.status === 'connected') {
+          console.log('Facebook login succeeded');
+          getInfo();
+        } else {
+          alert('Facebook login failed');
+        }
+      },
+      {scope: 'public_profile,email,publish_actions,user_friends'});
     };
 
-    fbLogged.resolve(authData);
-    fbLoginSuccess = null;
-  };
-
-  var fbLoginError = function(error){
-    fbLogged.reject(error);
-  };
-
-  $scope.login = function() {
-    if (!window.cordova) {
-      facebookConnectPlugin.browserInit('727860223998157');
-    }
-
-    facebookConnectPlugin.login(['public_profile', 'email'], fbLoginSuccess, fbLoginError);
-
-    fbLogged.then( function(authData) {
-      return Parse.FacebookUtils.logIn(authData);
-    })
-    .then( function(userObject) {
-      var authData = userObject.get('authData');
-
-      facebookConnectPlugin.api('/me', null,
-        function(response) {
-          userObject.set('profilePicture', 'https://graph.facebook.com/' + response.id + '/picture?type=large');
-          userObject.set('name', response.name);
-          userObject.set('facebook', response.id);
-          userObject.setEmail(response.email);
-          userObject.set('gPoints', 0);
-          userObject.save();
+  function getInfo() {
+    openFB.api({
+        path: '/me',
+        params: {fields: 'id,name,email'},
+        success: function(user) {
+          $scope.$apply(function() {
+            var query = new Parse.Query(Parse.User);
+              query.equalTo("username", user.email);  // find all the women
+              query.find({
+                success: function(results) {
+                  Parse.User.logIn(user.email, user.id, {
+                    success: function(user) {
+                      $state.go('games.list');
+                    }
+                  });
+                },
+                error: function(error) {
+                  var newUser = new Parse.User();
+                  newUser.set('email', user.email);
+                  newUser.set('username', user.email);
+                  newUser.set('password', user.id);
+                  newUser.set('name', user.name);
+                  newUser.set('facebook', user.id);
+                  newUser.set('profilePicture', 'https://graph.facebook.com/' + user.id + '/picture?type=large');
+                  newUser.set('gPoints', 0);
+                  console.log('user', newUser);
+                  newUser.signUp(null, {
+                    success: function(user) {
+                      $state.go('games.list');
+                      console.log('Success!');
+                    },
+                    error: function(user, error) {
+                      alert("Error: " + error.code + " " + error.message);
+                    }
+                  });
+                }
+              });
+          });
         },
-        function(error) {
+        error: function(error) {
+            alert('Facebook error: ' + error.error_description);
         }
-      );
-
-      $state.go('games.list');
-    }, function(error) {
     });
-  };
+  }
 }]);

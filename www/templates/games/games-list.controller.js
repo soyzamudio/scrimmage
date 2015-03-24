@@ -4,6 +4,7 @@ angular.module('scrimmagr')
 
   var Games = Parse.Object.extend("game");
   var query = new Parse.Query(Games);
+  query.include('creator');
   query.find()
   .then(function(games) {
     $scope.games = games;

@@ -4,8 +4,36 @@
       <a style="color: white;" class="button button-icon icon ion-ios-arrow-left" ng-click='goBack()'></a>
     </div>
     <h1 class="title view-title">Game</h1>
+    <div class="buttons">
+      <a href="" style="color: white" class="button button-icon icon ion-ios-upload-outline" ng-click="share()"></a>
+    </div>
   </ion-header-bar>
   <ion-content class='padding'>
-    {{game.attributes.nameLocation}}
+  <div class="list card">
+
+    <div class="item">
+        {{game.attributes.nameLocation}}
+    </div>
+    <div class="item item-image">
+      <div>
+        <link rel="import" href="../../lib/google-map/google-map.html">
+        <style>google-map { height: 200px; } </style>
+        <google-map latitude="{{game.attributes.geoLocation._latitude}}" longitude="{{game.attributes.geoLocation._longitude}}" disableDefaultUI fitToMarkers>
+          <google-map-marker latitude="{{game.attributes.geoLocation._latitude}}" longitude="{{game.attributes.geoLocation._longitude}}"
+                             title="Go Giants!" draggable="true">
+          </google-map-marker>
+        </google-map>
+      </div>
+    </div>
+
+  </div>
+
+    <div class="list card" ng-repeat='attendee in game.attributes.attendees'>
+      <div class="item item-avatar" ng-click='goToUser(attendee.id)'>
+        <img ng-src="{{attendee.attributes.profilePicture}}">
+        <h2>{{attendee.attributes.name}} <span style='color: #aeaeae'>({{attendee.attributes.gPoints}} points)</span></h2>
+        <p>{{attendee.attributes.email}}</p>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

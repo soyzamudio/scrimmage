@@ -4,8 +4,8 @@ angular.module('scrimmagr')
   console.log($scope.user);
 
   $scope.logout = function() {
+    logout();
     Parse.User.logOut();
-    $state.go('login');
   };
 
   $scope.editProfile = function() {
@@ -15,5 +15,16 @@ angular.module('scrimmagr')
   $scope.goBack = function() {
     $ionicHistory.goBack();
   };
+
+  function logout() {
+    openFB.logout(
+      function() {
+        $state.go('login');
+      }, errorHandler);
+  }
+
+  function errorHandler(error) {
+    alert(error.message);
+  }
 
 }]);

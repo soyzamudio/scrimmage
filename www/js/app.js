@@ -3,8 +3,9 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova', "LiveSearch"])
+angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova'])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+  openFB.init({appId: '727860223998157'});
   $urlRouterProvider.otherwise('login');
 
   $stateProvider
@@ -41,10 +42,11 @@ function($ionicPlatform, $rootScope, $state, $cordovaStatusbar, $cordovaGeolocat
     $rootScope.position = {};
 
     $ionicPlatform.ready(function() {
-      var posOptions = {timeout: 10000, enableHighAccuracy: false};
+      var posOptions = {timeout: 50000, enableHighAccuracy: false};
       $cordovaGeolocation
       .getCurrentPosition(posOptions)
       .then(function (position) {
+        console.log(position);
         $rootScope.position.latitude = position.coords.latitude;
         $rootScope.position.longitude = position.coords.longitude;
       }, function(err) {
