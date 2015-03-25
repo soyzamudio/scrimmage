@@ -2,7 +2,7 @@
 
   <ion-header-bar class="bar-scrimmage">
     <div class="buttons">
-      <a style="color: white;" class="button button-icon icon ion-ios-more" ng-click='settings()'></a>
+      <a style="color: white;" class="button button-icon icon ion-android-more-vertical" ng-click='settings()'></a>
     </div>
     <h1 class="title view-title">scrimmagr</h1>
     <div class="buttons">
@@ -12,12 +12,21 @@
   </ion-header-bar>
 
   <ion-content class='padding'>
-    <div class="list card" ng-repeat='game in games'>
-      <div class="item item-avatar" ng-click='goToGame(game.id)'>
-        <img ng-src="{{game.attributes.creator.attributes.profilePicture}}"/>
-        <h2>{{game.attributes.nameLocation}}</h2>
-        <p><i class="icon ion-ios-location"></i> {{game.attributes.distanceLocation * 0.00062137 | number:2}} Miles away</p>
-        <p><i class="icon ion-ios-people"></i> {{game.attributes.attendees.length}} player(s) going</p>
+    <div class="list card" ng-repeat="game in games">
+      <div class="item" ng-click="goToGame(game.id)">
+        <h2 style='font-family: "MoonBold"; text-align: center'>@{{game.attributes.nameLocation}}</h2>
+        <div class="row grey-text">
+          <div class="col col-10"><i class="icon ion ion-ios-clock"></i></div>
+          <div class="col">{{game.attributes.gameDay | amDateFormat: 'dddd, MMM Do @ h:mmA'}}</div>
+        </div>
+        <div class="row grey-text">
+          <div class="col col-10"><i class="icon ion-ios-location"></i></div>
+          <div class="col">{{game.attributes.distanceLocation * 0.00062137 | number:2}} miles away</div>
+        </div>
+        <div class="row grey-text">
+          <div class="col col-10"><i class="icon ion-ios-people"></i></div>
+          <div class="col">{{game.attributes.attendees.length}} player(s) going</div>
+        </div>
       </div>
     </div>
   </ion-content>

@@ -66,13 +66,16 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
     .then(function (position) {
       $rootScope.position.latitude = position.coords.latitude;
       $rootScope.position.longitude = position.coords.longitude;
-      $http.get('https://api.foursquare.com/v2/venues/search?client_id=I5SUCHUXOVNIODJBIDRZKZK0WDOQSCLWTC010EJPLYOEMXCL&client_secret=4SKETCNRUMUHKXEY24VTG20WMQKCFYCEAJBREIQ5IU4KB1K5&v=20130815&ll=' + $rootScope.position.latitude + ',' + $rootScope.position.longitude + '&query=soccer,field')
-      .then(function(response) {
-        $scope.venues = response.data.response.venues;
-      });
+      getFoursquareData($rootScope.position.latitude, $rootScope.position.longitude);
     }, function(err) {
       console.log(JSON.stringify(err));
     });
   });
 
+  function getFoursquareData(lat, lng) {
+    $http.get('https://api.foursquare.com/v2/venues/search?client_id=I5SUCHUXOVNIODJBIDRZKZK0WDOQSCLWTC010EJPLYOEMXCL&client_secret=4SKETCNRUMUHKXEY24VTG20WMQKCFYCEAJBREIQ5IU4KB1K5&v=20130815&ll=' + lat + ',' + lng + '&query=soccer,field')
+    .then(function(response) {
+      $scope.venues = response.data.response.venues;
+    });
+  }
 }]);

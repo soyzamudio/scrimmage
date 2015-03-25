@@ -15,13 +15,13 @@
       </div>
       <div class="item item-image">
         <div>
-          <link rel="import" href="../../lib/google-map/google-map.html">
-          <style>google-map { height: 200px; } </style>
-          <google-map latitude="{{game.attributes.geoLocation._latitude}}" longitude="{{game.attributes.geoLocation._longitude}}" disableDefaultUI fitToMarkers>
-            <google-map-marker latitude="{{game.attributes.geoLocation._latitude}}" longitude="{{game.attributes.geoLocation._longitude}}"
-                               title="{{game.attributes.nameLocation}}">
-            </google-map-marker>
-          </google-map>
+          <style>#map { height: 250px; } </style>
+          <div id="map" data-tap-disabled="true"></div>
+<!--           <google-map latitude="{{game.attributes.geoLocation._latitude}}" longitude="{{game.attributes.geoLocation._longitude}}" disableDefaultUI fitToMarkers>
+  <google-map-marker latitude="{{game.attributes.geoLocation._latitude}}" longitude="{{game.attributes.geoLocation._longitude}}"
+                     title="{{game.attributes.nameLocation}}">
+  </google-map-marker>
+</google-map> -->
         </div>
       </div>
     </div>

@@ -3,6 +3,11 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
+
+var handleOpenURL = function(url) {
+  window.localStorage.setItem("external_load", url);
+};
+
 angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova', 'angularMoment'])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
   openFB.init({appId: '727860223998157'});
@@ -26,8 +31,8 @@ angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova', 'angularMoment'])
   .state('users.show', {url: '/{userId}', templateUrl: 'templates/users/users-show.html', controller: 'UsersShowCtrl'});
 
 }])
-.run(['$ionicPlatform', '$rootScope', '$state', '$cordovaGeolocation',
-function($ionicPlatform, $rootScope, $state, $cordovaGeolocation) {
+.run(['$ionicPlatform', '$rootScope', '$state', '$cordovaGeolocation', '$window',
+function($ionicPlatform, $rootScope, $state, $cordovaGeolocation, $window) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -47,6 +52,20 @@ function($ionicPlatform, $rootScope, $state, $cordovaGeolocation) {
       event.preventDefault();
     }
   });
+
+  if ($window.localStorage.external_load) {
+    var params = $window.localStorage.external_load.split('//')[1].split('?');
+    $window.localStorage.removeItem('external_load');
+    var url = {base: params[0], param: params[1]};
+    if (url.base === 'users') {
+      $state.go('users.show', {userId: url.param});
+
+    } else if (url.base === 'games') {
+      $state.go('games.show', {gameId: url.param});
+    } else {
+      $state.go('games.list');
+    }
+  }
 }])
 .controller('RootCtrl', ['$state', function($state) {
     $state.go('games.list');

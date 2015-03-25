@@ -30,6 +30,10 @@ body {
   color: #c4c4c4;
 }
 
+.grey-text {
+  color: #999
+}
+
 /* Toggle styling */
 
 .toggle.toggle-facebook input:checked + .track {
