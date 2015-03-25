@@ -16,7 +16,8 @@
       <div class="item item-avatar" ng-click='goToGame(game.id)'>
         <img ng-src="{{game.attributes.creator.attributes.profilePicture}}"/>
         <h2>{{game.attributes.nameLocation}}</h2>
-        <p><i class="icon ion-ios-location"></i> 120 km</p>
+        <p><i class="icon ion-ios-location"></i> {{game.attributes.distanceLocation * 0.00062137 | number:2}} Miles away</p>
+        <p><i class="icon ion-ios-people"></i> {{game.attributes.attendees.length}} player(s) going</p>
       </div>
     </div>
   </ion-content>

@@ -1,5 +1,5 @@
 body {
-  font-family: "MoonBold";
+  font-family: "MoonBold" !important;
 }
 
 /* Navbar styling... */

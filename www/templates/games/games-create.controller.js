@@ -5,9 +5,8 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
   $scope.user = Parse.User.current().attributes;
   $scope.venues = [];
   $scope.selectedLocation = {};
-  $scope.hide = false;
   $scope.selectedTimeText = 'Select a day a time';
-  $rootScope.position = {};
+  $scope.hide = true;
 
   $scope.goBack = function() {
     $ionicHistory.goBack();
@@ -16,7 +15,8 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
   $scope.selectVenue = function(venue) {
     $scope.selectedLocation = venue;
     $scope.search.venue = $scope.selectedLocation.name;
-    $scope.hide = true;
+    console.log($scope.selectedLocation);
+    $scope.hide = false;
   };
 
   $scope.submit = function() {
@@ -25,8 +25,9 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
     var game = new Game();
     game.set('nameLocation', $scope.selectedLocation.name);
     game.set('geoLocation', point);
-    game.set('addressLocation', $scope.selectedLocation.formattedAddress);
+    game.set('addressLocation', $scope.selectedLocation.location.formattedAddress);
     game.set('gameDay', $scope.selectedTime);
+    game.set('distanceLocation', $scope.selectedLocation.location.distance);
     game.set('creator', Parse.User.current());
     game.set('attendees', [{"__type":"Pointer","className":"_User","objectId": Parse.User.current().id}]);
     game.save()
@@ -55,10 +56,7 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
     });
   };
 
-  $http.get('https://api.foursquare.com/v2/venues/search?client_id=I5SUCHUXOVNIODJBIDRZKZK0WDOQSCLWTC010EJPLYOEMXCL&client_secret=4SKETCNRUMUHKXEY24VTG20WMQKCFYCEAJBREIQ5IU4KB1K5&v=20130815&ll=' + $rootScope.position.latitude + ',' + $rootScope.position.longitude + '&query=soccer,field')
-  .then(function(response) {
-    $scope.venues = response.data.response.venues;
-  });
+  $rootScope.position = {};
 
   $ionicPlatform.ready(function() {
     console.log('location');
@@ -68,8 +66,10 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
     .then(function (position) {
       $rootScope.position.latitude = position.coords.latitude;
       $rootScope.position.longitude = position.coords.longitude;
-      console.log(position);
-
+      $http.get('https://api.foursquare.com/v2/venues/search?client_id=I5SUCHUXOVNIODJBIDRZKZK0WDOQSCLWTC010EJPLYOEMXCL&client_secret=4SKETCNRUMUHKXEY24VTG20WMQKCFYCEAJBREIQ5IU4KB1K5&v=20130815&ll=' + $rootScope.position.latitude + ',' + $rootScope.position.longitude + '&query=soccer,field')
+      .then(function(response) {
+        $scope.venues = response.data.response.venues;
+      });
     }, function(err) {
       console.log(JSON.stringify(err));
     });

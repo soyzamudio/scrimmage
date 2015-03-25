@@ -16,10 +16,10 @@
       <div class="item item-divider divider-dark">
         Location
       </div>
-      <label class="item item-input">
+      <label class="item item-input" ng-if='hide'>
         <input type="text" placeholder="Select a location" ng-model='search.venue'>
       </label>
-      <a class="item" style='color: #898989' ng-repeat='venue in venues | filter:{ name: search.venue }' ng-hide='hide' ng-if='search.venue' ng-click='selectVenue(venue)'>{{venue.name}} - {{venue.location.distance * 0.00062137 | number:2}} Miles away</a>
+      <a class="item" style='color: #898989' ng-repeat='venue in venues | filter:{ name: search.venue }' ng-if='search.venue' ng-click='selectVenue(venue)'>{{venue.name}} - {{venue.location.distance * 0.00062137 | number:2}} Miles away</a>
 
       <div class="item item-divider divider-dark">
         Time

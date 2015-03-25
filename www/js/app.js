@@ -38,19 +38,6 @@ function($ionicPlatform, $rootScope, $state, $cordovaGeolocation) {
       StatusBar.overlaysWebView(true);
       StatusBar.style(1) ;
     }
-
-    $rootScope.position = {};
-
-    var posOptions = {timeout: 10000, enableHighAccuracy: true};
-    $cordovaGeolocation
-    .getCurrentPosition(posOptions)
-    .then(function (position) {
-      console.log(position);
-      $rootScope.position.latitude = position.coords.latitude;
-      $rootScope.position.longitude = position.coords.longitude;
-    }, function(err) {
-      console.log(JSON.stringify(err));
-    });
   });
 
   $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
