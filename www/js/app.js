@@ -26,8 +26,8 @@ angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova'])
   .state('users.show', {url: '/{userId}', templateUrl: 'templates/users/users-show.html', controller: 'UsersShowCtrl'});
 
 }])
-.run(['$ionicPlatform', '$rootScope', '$state', '$cordovaStatusbar', '$cordovaGeolocation',
-function($ionicPlatform, $rootScope, $state, $cordovaStatusbar, $cordovaGeolocation) {
+.run(['$ionicPlatform', '$rootScope', '$state', '$cordovaGeolocation',
+function($ionicPlatform, $rootScope, $state, $cordovaGeolocation) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -35,23 +35,21 @@ function($ionicPlatform, $rootScope, $state, $cordovaStatusbar, $cordovaGeolocat
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
     if(window.StatusBar) {
-      $cordovaStatusbar.overlaysWebView(true);
-      $cordovaStatusbar.style(1);
+      StatusBar.overlaysWebView(true);
+      StatusBar.style(1) ;
     }
 
     $rootScope.position = {};
 
-    $ionicPlatform.ready(function() {
-      var posOptions = {timeout: 50000, enableHighAccuracy: false};
-      $cordovaGeolocation
-      .getCurrentPosition(posOptions)
-      .then(function (position) {
-        console.log(position);
-        $rootScope.position.latitude = position.coords.latitude;
-        $rootScope.position.longitude = position.coords.longitude;
-      }, function(err) {
-        console.log(JSON.stringify(err));
-      });
+    var posOptions = {timeout: 10000, enableHighAccuracy: true};
+    $cordovaGeolocation
+    .getCurrentPosition(posOptions)
+    .then(function (position) {
+      console.log(position);
+      $rootScope.position.latitude = position.coords.latitude;
+      $rootScope.position.longitude = position.coords.longitude;
+    }, function(err) {
+      console.log(JSON.stringify(err));
     });
   });
 
