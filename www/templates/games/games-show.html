@@ -20,7 +20,7 @@
         <style>google-map { height: 200px; } </style>
         <google-map latitude="{{game.attributes.geoLocation._latitude}}" longitude="{{game.attributes.geoLocation._longitude}}" disableDefaultUI fitToMarkers>
           <google-map-marker latitude="{{game.attributes.geoLocation._latitude}}" longitude="{{game.attributes.geoLocation._longitude}}"
-                             title="Go Giants!" draggable="true">
+                             title="{{game.attributes.nameLocation}}">
           </google-map-marker>
         </google-map>
       </div>
