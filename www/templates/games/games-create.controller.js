@@ -5,6 +5,7 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
   $scope.user = Parse.User.current().attributes;
   $scope.venues = [];
   $scope.selectedLocation = {};
+  $scope.hide = false;
 
   $scope.goBack = function() {
     $ionicHistory.goBack();
@@ -13,6 +14,7 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
   $scope.selectVenue = function(venue) {
     $scope.selectedLocation = venue;
     $scope.search.venue = $scope.selectedLocation.name;
+    $scope.hide = true;
   };
 
   $scope.submit = function() {
