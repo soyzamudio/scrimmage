@@ -17,19 +17,14 @@
         Location
       </div>
       <label class="item item-input">
-        <input type="text" placeholder="Where are you playing?" ng-model='search.venue'>
+        <input type="text" placeholder="Select a location" ng-model='search.venue'>
       </label>
       <a class="item" style='color: #898989' ng-repeat='venue in venues | filter:{ name: search.venue }' ng-hide='hide' ng-if='search.venue' ng-click='selectVenue(venue)'>{{venue.name}} - {{venue.location.distance * 0.00062137 | number:2}} Miles away</a>
 
       <div class="item item-divider divider-dark">
         Time
       </div>
-      <a class="item" style='color: #222' ng-click='getDate()'>
-        Give it a day...
-      </a>
-      <a class="item" style='color: #222' ng-click='getTime()'>
-        Give it a time...
-      </a>
+      <a class="item" style='color: #222' ng-click='getDate()' ng-bind='selectedTimeText'></a>
 
     </div>
   </ion-content>
