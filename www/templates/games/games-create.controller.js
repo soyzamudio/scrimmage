@@ -1,10 +1,12 @@
 angular.module('scrimmagr')
-.controller('GamesCreateCtrl', ['$rootScope', '$scope', '$state', '$ionicPlatform', '$ionicHistory', '$cordovaGeolocation', '$http',
-function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeolocation, $http) {
+.controller('GamesCreateCtrl', ['$rootScope', '$scope', '$state', '$ionicPlatform', '$ionicHistory', '$cordovaGeolocation', '$http', '$cordovaDatePicker', 'moment',
+function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeolocation, $http, $cordovaDatePicker, moment) {
   $scope.search = {};
   $scope.user = Parse.User.current().attributes;
   $scope.venues = [];
   $scope.selectedLocation = {};
+  $scope.selectedTimeText = 'Select a day a time';
+  $rootScope.position = {};
 
   $scope.goBack = function() {
     $ionicHistory.goBack();
@@ -22,7 +24,7 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
     game.set('nameLocation', $scope.selectedLocation.name);
     game.set('geoLocation', point);
     game.set('addressLocation', $scope.selectedLocation.formattedAddress);
-    game.set('gameDay', new Date());
+    game.set('gameDay', $scope.selectedTime);
     game.set('creator', Parse.User.current());
     game.set('attendees', [{"__type":"Pointer","className":"_User","objectId": Parse.User.current().id}]);
     game.save()
@@ -32,31 +34,43 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
   };
 
   $scope.getDate = function() {
-    console.log('getDate()');
+    var options = {
+      date:              new Date(),
+      mode:              'date, time', // or 'time'
+      maxDate:           moment().add(90, 'days').toDate(),
+      allowOldDates:     true,
+      allowFutureDates:  false,
+      doneButtonLabel:   'DONE',
+      doneButtonColor:   '#000000',
+      cancelButtonLabel: 'CANCEL',
+      cancelButtonColor: '#000000'
+    };
+
+    $cordovaDatePicker.show(options)
+    .then(function(date){
+      $scope.selectedTime = date;
+      $scope.selectedTimeText = moment($scope.selectedTime).format('LLL');
+    });
   };
 
-  $scope.getTime = function() {
-    console.log('getTime()');
-  };
-
-  $http.get('https://api.foursquare.com/v2/venues/search?client_id=I5SUCHUXOVNIODJBIDRZKZK0WDOQSCLWTC010EJPLYOEMXCL&client_secret=4SKETCNRUMUHKXEY24VTG20WMQKCFYCEAJBREIQ5IU4KB1K5&v=20130815&ll=37.5483,-121.9886&query=soccer,field')
+  $http.get('https://api.foursquare.com/v2/venues/search?client_id=I5SUCHUXOVNIODJBIDRZKZK0WDOQSCLWTC010EJPLYOEMXCL&client_secret=4SKETCNRUMUHKXEY24VTG20WMQKCFYCEAJBREIQ5IU4KB1K5&v=20130815&ll=' + $rootScope.position.latitude + ',' + $rootScope.position.longitude + '&query=soccer,field')
   .then(function(response) {
     $scope.venues = response.data.response.venues;
   });
 
-  // $ionicPlatform.ready(function() {
-  //   console.log('location');
-  //   var posOptions = {timeout: 50000, enableHighAccuracy: false};
-  //   $cordovaGeolocation
-  //   .getCurrentPosition(posOptions)
-  //   .then(function (position) {
-  //     $rootScope.position.latitude = position.coords.latitude;
-  //     $rootScope.position.longitude = position.coords.longitude;
-  //     console.log(position);
-  //
-  //   }, function(err) {
-  //     console.log(JSON.stringify(err));
-  //   });
-  // });
+  $ionicPlatform.ready(function() {
+    console.log('location');
+    var posOptions = {timeout: 50000, enableHighAccuracy: false};
+    $cordovaGeolocation
+    .getCurrentPosition(posOptions)
+    .then(function (position) {
+      $rootScope.position.latitude = position.coords.latitude;
+      $rootScope.position.longitude = position.coords.longitude;
+      console.log(position);
+
+    }, function(err) {
+      console.log(JSON.stringify(err));
+    });
+  });
 
 }]);
