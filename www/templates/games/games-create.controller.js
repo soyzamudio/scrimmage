@@ -1,6 +1,6 @@
 angular.module('scrimmagr')
-.controller('GamesCreateCtrl', ['$rootScope', '$scope', '$state', '$ionicPlatform', '$ionicHistory', '$cordovaGeolocation', '$http', '$cordovaDatePicker', 'moment',
-function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeolocation, $http, $cordovaDatePicker, moment) {
+.controller('GamesCreateCtrl', ['$rootScope', '$scope', '$state', '$ionicPlatform', '$ionicHistory', '$cordovaGeolocation', '$http', '$cordovaDatePicker', 'moment', '$cordovaProgress',
+function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeolocation, $http, $cordovaDatePicker, moment, $cordovaProgress) {
   $scope.search = {};
   $scope.user = Parse.User.current().attributes;
   $scope.venues = [];
@@ -32,6 +32,7 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
     game.set('attendees', [{"__type":"Pointer","className":"_User","objectId": Parse.User.current().id}]);
     game.save()
     .then(function(game) {
+      $cordovaProgress.showAnnular(true, 3000);
       $state.go('games.list');
     });
   };

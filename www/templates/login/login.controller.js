@@ -1,5 +1,5 @@
 angular.module('scrimmagr')
-.controller('LoginCtrl', ['$scope', '$state', function($scope, $state) {
+.controller('LoginCtrl', ['$scope', '$state', '$cordovaProgress', function($scope, $state, $cordovaProgress) {
   $scope.fbLogin = function() {
     openFB.login(
       function(response) {
@@ -25,6 +25,7 @@ angular.module('scrimmagr')
                 success: function(results) {
                   Parse.User.logIn(user.email, user.id, {
                     success: function(user) {
+                      $cordovaProgress.showDeterminate(false, 2000);
                       $state.go('games.list');
                     }
                   });
@@ -41,6 +42,7 @@ angular.module('scrimmagr')
                   console.log('user', newUser);
                   newUser.signUp(null, {
                     success: function(user) {
+                      $cordovaProgress.showDeterminate(false, 3000);
                       $state.go('games.list');
                       console.log('Success!');
                     },

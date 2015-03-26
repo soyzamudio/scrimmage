@@ -2,6 +2,23 @@ body {
   font-family: "MoonBold" !important;
 }
 
+h2 {
+  font-family: "MoonBold" !important;
+}
+
+.background-gif {
+  background:  url(../img/video.gif) no-repeat -600px center fixed;
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+  background-size: cover;
+}
+
 /* Navbar styling... */
 
 .bar-scrimmage {
@@ -10,6 +27,12 @@ body {
   background-color: #222;
   background-image: linear-gradient(0deg, #222, #222 50%, transparent 50%);
   color: #f1f1f1;
+}
+
+.bar-transparent {
+  border: none;
+  background-color: transparent;
+  background-image: linear-gradient(0deg, #222, #222 50%, transparent 100%);
 }
 
 .view-title {

@@ -1,5 +1,6 @@
 angular.module('scrimmagr')
-.controller('GamesListCtrl', ['$scope', '$state', function($scope, $state) {
+.controller('GamesListCtrl', ['$scope', '$state', '$cordovaDialogs',
+function($scope, $state, $cordovaDialogs) {
 
   var Games = Parse.Object.extend("game");
   var query = new Parse.Query(Games);
