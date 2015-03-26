@@ -6,12 +6,11 @@
     </div>
     <h1 class="title view-title">scrimmagr</h1>
     <div class="buttons">
-      <a style="color: white;" class="button button-icon icon ion-trophy" ng-click='ranking()'></a>
       <a style="color: white;" class="button button-icon icon ion-ios-plus-empty" ng-click='goToCreate()'></a>
     </div>
   </ion-header-bar>
 
-  <ion-content class='padding'>
+  <ion-content class='padding scroll'>
     <div class="list card" ng-repeat="game in games">
       <div class="item" ng-click="goToGame(game.id)">
         <h2 style='font-family: "MoonBold"; text-align: center'>@{{game.attributes.nameLocation}}</h2>

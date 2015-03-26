@@ -1,8 +1,9 @@
 angular.module('scrimmagr')
-.controller('GamesShowCtrl', ['$scope', '$state', '$ionicHistory', '$ionicLoading', '$compile', '$cordovaSocialSharing', 'moment', '$http',
-function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialSharing, moment, $http) {
-
-  var temperature = null;
+.controller('GamesShowCtrl', ['$scope', '$state', '$ionicHistory', '$ionicLoading', '$compile', '$cordovaSocialSharing', 'moment', '$http', 'lodash',
+function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialSharing, moment, $http, lodash) {
+  $scope.user = Parse.User.current();
+  $scope.temperature = null;
+  $scope.notAttending = false;
 
   var Games = Parse.Object.extend("game");
   var query = new Parse.Query(Games);
@@ -13,6 +14,13 @@ function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialS
       $scope.game = game;
       drawMap($scope.game);
       getWeather($scope.game);
+      for (var n in game.attributes.attendees) {
+        if (lodash.isMatch(game.attributes.attendees[n], { 'id': $scope.user.id }) === false) {
+          $scope.notAttending = true;
+        } else {
+          $scope.notAttending = false;
+        }
+      }
     }
   });
 
@@ -31,13 +39,27 @@ function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialS
     $state.go('users.show', {userId: userId});
   };
 
+  $scope.attend = function() {
+    $scope.game.attributes.attendees.push({"__type":"Pointer","className":"_User","objectId":$scope.user.id});
+    console.log($scope.game.attributes.attendees);
+    var Game = Parse.Object.extend('game');
+    var game = new Game();
+    game.id = $scope.game.id;
+    game.set('attendees', $scope.game.attributes.attendees);
+    game.save(null, {
+      success: function(game) {
+        $scope.notAttending = false;
+        $state.go($state.$current, null, { reload: true });
+      }
+    });
+  };
+
   function getWeather(game) {
     var day = moment(game.attributes.gameDay).format('MMDD');
-    $http.get('http://api.wunderground.com/api/f072e1fa016ca1ac/planner_' + day + day + '/q/CA/San_Francisco.json')
-    .then(function(response) {
-      $scope.temperature = response.data.trip;
-      console.log(response.data.trip);
-    });
+    // $http.get('http://api.wunderground.com/api/f072e1fa016ca1ac/planner_' + day + day + '/q/CA/San_Francisco.json')
+    // .then(function(response) {
+    //   $scope.temperature = response.data.trip;
+    // });
   }
 
   function drawMap(game) {

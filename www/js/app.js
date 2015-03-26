@@ -8,7 +8,7 @@ var handleOpenURL = function(url) {
   window.localStorage.setItem("external_load", url);
 };
 
-angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova', 'angularMoment'])
+angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova', 'angularMoment', 'ngLodash'])
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
   openFB.init({appId: '727860223998157'});
   $urlRouterProvider.otherwise('login');

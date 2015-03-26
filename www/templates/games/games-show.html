@@ -9,12 +9,13 @@
     </div>
   </ion-header-bar>
   <ion-content class='padding'>
+    <button class="button button-outline button-block icon-left ion-ios-location-outline" ng-if='notAttending' ng-click='attend()'>Check in!</button>
 
     <div class="list card">
       <div class="item">
-          <h2>{{game.attributes.nameLocation}}</h2>
-          <h2 class='grey-text'>{{game.attributes.addressLocation[0]}}</h2>
-          <h2 class='grey-text'>{{game.attributes.addressLocation[1]}}</h2>
+        <h2>{{game.attributes.nameLocation}}</h2>
+        <h2 class='grey-text'>{{game.attributes.addressLocation[0]}}</h2>
+        <h2 class='grey-text'>{{game.attributes.addressLocation[1]}}</h2>
       </div>
       <div class="item item-image">
         <div>
@@ -28,21 +29,21 @@
         </div>
       </div>
       <div class="item">
-          <h2><i class="icon ion-ios-partlysunny"></i> Weather Forecast</h2>
-          <div class="row">
-            <div class="col">
-              <h2 class="grey-text">High:</h2>
-            </div>
-            <div class="col">
-              <h2 class="grey-text">{{temperature.temp_high.max.F}} <span style="font-family: 'Helvetica'">&deg;</span>F</h2>
-            </div>
-            <div class="col">
-              <h2 class="grey-text">Low:</h2>
-            </div>
-            <div class="col">
-              <h2 class="grey-text">{{temperature.temp_high.min.F}} <span style="font-family: 'Helvetica'">&deg;</span>F</h2>
-            </div>
+        <h2><i class="icon ion-ios-partlysunny"></i> Weather Forecast</h2>
+        <div class="row">
+          <div class="col">
+            <h2 class="grey-text">High:</h2>
           </div>
+          <div class="col">
+            <h2 class="grey-text">{{temperature.temp_high.max.F}} <span style="font-family: 'Helvetica'">&deg;</span>F</h2>
+          </div>
+          <div class="col">
+            <h2 class="grey-text">Low:</h2>
+          </div>
+          <div class="col">
+            <h2 class="grey-text">{{temperature.temp_high.min.F}} <span style="font-family: 'Helvetica'">&deg;</span>F</h2>
+          </div>
+        </div>
       </div>
     </div>
 
