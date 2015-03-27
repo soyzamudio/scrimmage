@@ -1,11 +1,10 @@
 angular.module('scrimmagr')
-.controller('SettingsAccountCtrl', ['$scope', '$state', '$ionicHistory', function($scope, $state, $ionicHistory) {
-  $scope.user = Parse.User.current().attributes;
-  console.log($scope.user);
+.controller('SettingsAccountCtrl', ['$rootScope', '$scope', '$state', '$ionicHistory',
+function($rootScope, $scope, $state, $ionicHistory) {
 
   $scope.logout = function() {
-    logout();
-    Parse.User.logOut();
+    $rootScope.auth.$unauth();
+    $state.go('login');
   };
 
   $scope.editProfile = function() {
@@ -15,16 +14,5 @@ angular.module('scrimmagr')
   $scope.goBack = function() {
     $ionicHistory.goBack();
   };
-
-  function logout() {
-    openFB.logout(
-      function() {
-        $state.go('login');
-      }, errorHandler);
-  }
-
-  function errorHandler(error) {
-    alert(error.message);
-  }
 
 }]);

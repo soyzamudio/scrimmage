@@ -8,7 +8,8 @@ var handleOpenURL = function(url) {
   window.localStorage.setItem("external_load", url);
 };
 
-angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova', 'angularMoment', 'ngLodash'])
+angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova', 'angularMoment', 'ngLodash', 'firebase'])
+
 .config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
   openFB.init({appId: '727860223998157'});
   $urlRouterProvider.otherwise('login');
@@ -17,22 +18,22 @@ angular.module('scrimmagr', ['ionic', 'ui.router','ngCordova', 'angularMoment', 
   .state('root', { url: '', controller: 'RootCtrl', data: { authenticate: false }})
   .state('login', { url: '/login', templateUrl: 'templates/login/login.html', controller: 'LoginCtrl', data: { authenticate: false }})
 
-  .state('settings', { url: '/settings', templateUrl: 'templates/settings/settings.html', abstract: true, data: { authenticate: true }})
+  .state('settings', { url: '/settings', templateUrl: 'templates/settings/settings.html', abstract: true})
   .state('settings.account', { url: '/account', templateUrl: 'templates/settings/settings-account.html', controller: 'SettingsAccountCtrl'})
   .state('settings.edit', { url: '/edit', templateUrl: 'templates/settings/settings-edit.html', controller: 'SettingsEditCtrl'})
 
-  .state('games', { url: '/games', templateUrl: 'templates/games/games.html', abstract: true, data: { authenticate: true }})
+  .state('games', { url: '/games', templateUrl: 'templates/games/games.html', abstract: true})
   .state('games.create', { url: '/create', templateUrl: 'templates/games/games-create.html', controller: 'GamesCreateCtrl'})
   .state('games.list', { url: '/list', templateUrl: 'templates/games/games-list.html', controller: 'GamesListCtrl'})
   .state('games.show', { url: '/{gameId}', templateUrl: 'templates/games/games-show.html', controller: 'GamesShowCtrl'})
 
-  .state('users', { url: '/users/', templateUrl: 'templates/users/users.html', abstract: true, data: { authenticate: true }})
+  .state('users', { url: '/users/', templateUrl: 'templates/users/users.html', abstract: true})
   .state('users.ranking', {url: '/ranking', templateUrl: 'templates/users/users-ranking.html', controller: 'UsersRankingCtrl'})
   .state('users.show', {url: '/{userId}', templateUrl: 'templates/users/users-show.html', controller: 'UsersShowCtrl'});
 
 }])
-.run(['$ionicPlatform', '$rootScope', '$state', '$cordovaGeolocation', '$window',
-function($ionicPlatform, $rootScope, $state, $cordovaGeolocation, $window) {
+.run(['$ionicPlatform', '$rootScope', '$state', '$cordovaGeolocation', '$window', '$firebaseAuth',
+function($ionicPlatform, $rootScope, $state, $cordovaGeolocation, $window, $firebaseAuth) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -46,8 +47,9 @@ function($ionicPlatform, $rootScope, $state, $cordovaGeolocation, $window) {
   });
 
   $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
-    if (toState.data.authenticate && !Parse.User.current()) {
-      // User isn’t authenticated
+    $rootScope.ref = new Firebase("https://glaring-torch-7897.firebaseio.com");
+    $rootScope.auth = $firebaseAuth($rootScope.ref);
+    if (!$rootScope.auth.$getAuth()) {
       $state.transitionTo("login");
       event.preventDefault();
     }
@@ -59,7 +61,6 @@ function($ionicPlatform, $rootScope, $state, $cordovaGeolocation, $window) {
     var url = {base: params[0], param: params[1]};
     if (url.base === 'users') {
       $state.go('users.show', {userId: url.param});
-
     } else if (url.base === 'games') {
       $state.go('games.show', {gameId: url.param});
     } else {
@@ -68,5 +69,5 @@ function($ionicPlatform, $rootScope, $state, $cordovaGeolocation, $window) {
   }
 }])
 .controller('RootCtrl', ['$state', function($state) {
-    $state.go('games.list');
+    $state.go('login');
 }]);
