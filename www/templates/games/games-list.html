@@ -11,12 +11,12 @@
   </ion-header-bar>
 
   <ion-content class='padding scroll'>
-    <div class="list card" ng-repeat="game in games track by $index | orderBy : '-day' | filter :{distance:filterDistance}">
-      <div class="item" ng-click="goToGame(game.id)">
+    <div class="list card" ng-repeat="(key, game) in games track by $index | orderBy : '-day' | filter :{distance:filterDistance}">
+      <div class="item" ng-click="goToGame(key)">
         <h2 style='font-family: "MoonBold"; text-align: center'>@{{game.name}}</h2>
         <div class="row grey-text">
           <div class="col col-10"><i class="icon ion ion-ios-clock"></i></div>
-          <div class="col">{{game.formattedDay}}</div>
+          <div class="col">{{game.day | formatTime}}</div>
         </div>
         <div class="row grey-text">
           <div class="col col-10"><i class="icon ion-ios-location"></i></div>

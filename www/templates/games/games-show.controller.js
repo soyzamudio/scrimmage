@@ -1,14 +1,15 @@
 angular.module('scrimmagr')
-.controller('GamesShowCtrl', ['$rootScope', '$scope', '$state', '$ionicHistory', '$ionicLoading', '$compile', '$cordovaSocialSharing', 'moment', '$http', 'lodash', '$cordovaProgress',
-function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialSharing, moment, $http, lodash, $cordovaProgress) {
+.controller('GamesShowCtrl', ['$rootScope', '$scope', '$state', '$ionicHistory', '$ionicLoading', '$compile', '$cordovaSocialSharing', 'moment', '$http', 'lodash', '$cordovaProgress', '$firebaseObject',
+function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialSharing, moment, $http, lodash, $cordovaProgress, $firebaseObject) {
   $scope.temperature = null;
   $scope.notAttending = false;
 
   var ref = new Firebase("https://glaring-torch-7897.firebaseio.com/games/" + $state.params.gameId);
-  ref.on("value", function(game) {
-    $scope.game = game.val();
+  var game = $firebaseObject(ref);
+  game.$loaded(function(game) {
+    $scope.game = game;
     drawMap($scope.game);
-    getWeather($scope.game);
+    // getWeather($scope.game);
     for (var n in $scope.game.attendees) {
       if (lodash.isMatch($scope.game.attendees[n], { 'email': $rootScope.auth.$getAuth().facebook.email }) === false) {
         $scope.notAttending = true;
@@ -31,31 +32,28 @@ function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $co
     .then(function(result) {});
   };
 
-  $scope.goToUser = function(userId) {
-    $state.go('users.show', {userId: userId});
-  };
-
-  $scope.attend = function() {
-    var uid = $rootScope.auth.$getAuth().uid;
-    var userRef = new Firebase("https://glaring-torch-7897.firebaseio.com/users/" + uid);
-    userRef.on("value", function(user) {
-      $scope.game.attendees.push(user.val());
-      delete $scope.game.attendees[0].$$hashKey;
-      console.log('attendees...', $scope.game.attendees);
-      ref.update({
-        attendees: $scope.game.attendees
-      });
-      $scope.notAttending = false;
-      $scope.$apply();
-    });
-  };
-
+  //
+  // $scope.attend = function() {
+  //   var uid = $rootScope.auth.$getAuth().uid;
+  //   var userRef = new Firebase("https://glaring-torch-7897.firebaseio.com/users/" + uid);
+  //   userRef.on("value", function(user) {
+  //     $scope.game.attendees.push(user.val());
+  //     delete $scope.game.attendees[0].$$hashKey;
+  //     console.log('attendees...', $scope.game.attendees);
+  //     ref.update({
+  //       attendees: $scope.game.attendees
+  //     });
+  //     $scope.notAttending = false;
+  //     $scope.$apply();
+  //   });
+  // };
+  //
   function getWeather(game) {
     var day = moment(game.day).format('MMDD');
-    // $http.get('http://api.wunderground.com/api/f072e1fa016ca1ac/planner_' + day + day + '/q/CA/San_Francisco.json')
-    // .then(function(response) {
-    //   $scope.temperature = response.data.trip;
-    // });
+    $http.get('http://api.wunderground.com/api/f072e1fa016ca1ac/planner_' + day + day + '/q/CA/San_Francisco.json')
+    .then(function(response) {
+      $scope.temperature = response.data.trip;
+    });
   }
 
   function drawMap(game) {
@@ -64,7 +62,7 @@ function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $co
     var mapOptions = {
       disableDefaultUI: true,
       center:           myLatlng,
-      zoom:             12,
+      zoom:             15,
       mapTypeId:        google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById("map"),
