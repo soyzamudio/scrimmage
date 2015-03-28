@@ -1,15 +1,14 @@
 angular.module('scrimmagr')
-.controller('GamesListCtrl', ['$scope', '$state', '$cordovaDialogs',
-function($scope, $state, $cordovaDialogs) {
+.controller('GamesListCtrl', ['$rootScope', '$scope', '$state', '$cordovaDialogs', 'moment',
+function($rootScope, $scope, $state, $cordovaDialogs, moment) {
 
-  var Games = Parse.Object.extend("game");
-  var query = new Parse.Query(Games);
-  query.include('creator');
-  query.ascending('gameDay');
-  query.ascending('distanceLocation');
-  query.find()
-  .then(function(games) {
-    $scope.games = games;
+  $scope.games = [];
+
+  var ref = new Firebase("https://glaring-torch-7897.firebaseio.com/games");
+  ref.on("child_added", function(game) {
+    $scope.game = game.val();
+    $scope.game.formattedDay = moment.unix(game.val().day).format('dddd, MMM Do @ h:mmA');
+    $scope.games.push($scope.game);
   });
 
   $scope.goToCreate = function() {
@@ -26,6 +25,10 @@ function($scope, $state, $cordovaDialogs) {
 
   $scope.settings = function() {
     $state.go('settings.account');
+  };
+
+  $scope.filterDistance = function (game) {
+    return game.distance <= 160934;
   };
 
 }]);

@@ -6,7 +6,6 @@ angular.module('scrimmagr')
     ref.authWithOAuthPopup("facebook", function(error, authData) {});
 
     ref.onAuth(function(authData) {
-      console.log('onAuth: ', authData);
       if (authData) {
         ref.child('users').child(authData.uid).set({
           provider: authData.provider,
@@ -20,10 +19,6 @@ angular.module('scrimmagr')
 
     function getName(authData) {
       switch(authData.provider) {
-        case 'password':
-          return authData.password.email.replace(/@.*/, '');
-        case 'twitter':
-          return authData.twitter.displayName;
         case 'facebook':
           return authData.facebook.displayName;
       }

@@ -1,8 +1,9 @@
 angular.module('scrimmagr')
-.controller('GamesCreateCtrl', ['$rootScope', '$scope', '$state', '$ionicPlatform', '$ionicHistory', '$cordovaGeolocation', '$http', '$cordovaDatePicker', 'moment', '$cordovaProgress',
-function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeolocation, $http, $cordovaDatePicker, moment, $cordovaProgress) {
+.controller('GamesCreateCtrl', ['$rootScope', '$scope', '$state', '$ionicPlatform', '$ionicHistory', '$cordovaGeolocation', '$http', '$cordovaDatePicker', 'moment', '$cordovaProgress', '$firebaseObject',
+function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeolocation, $http, $cordovaDatePicker, moment, $cordovaProgress, $firebaseObject) {
+  var ref = new Firebase("https://glaring-torch-7897.firebaseio.com");
+  var gameRef = ref.child("games");
   $scope.search = {};
-  $scope.user = Parse.User.current().attributes;
   $scope.venues = [];
   $scope.selectedLocation = {};
   $scope.selectedTimeText = 'Select a day a time';
@@ -15,23 +16,23 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
   $scope.selectVenue = function(venue) {
     $scope.selectedLocation = venue;
     $scope.search.venue = $scope.selectedLocation.name;
-    console.log($scope.selectedLocation);
     $scope.hide = false;
   };
 
   $scope.submit = function() {
-    var point = new Parse.GeoPoint({latitude: $scope.selectedLocation.location.lat, longitude: $scope.selectedLocation.location.lng});
-    var Game = Parse.Object.extend('game');
-    var game = new Game();
-    game.set('nameLocation', $scope.selectedLocation.name);
-    game.set('geoLocation', point);
-    game.set('addressLocation', $scope.selectedLocation.location.formattedAddress);
-    game.set('gameDay', $scope.selectedTime);
-    game.set('distanceLocation', $scope.selectedLocation.location.distance);
-    game.set('creator', Parse.User.current());
-    game.set('attendees', [{"__type":"Pointer","className":"_User","objectId": Parse.User.current().id}]);
-    game.save()
-    .then(function(game) {
+    var uid = $rootScope.auth.$getAuth().uid;
+    var ref = new Firebase("https://glaring-torch-7897.firebaseio.com/users/" + uid);
+    ref.on("value", function(user) {
+      $scope.currentUser = user.val();
+      gameRef.push({
+        name: $scope.selectedLocation.name,
+        geopoint: {lat: $scope.selectedLocation.location.lat, lng: $scope.selectedLocation.location.lng},
+        address: $scope.selectedLocation.location.formattedAddress,
+        day: moment($scope.selectedTime).unix(),
+        distance: $scope.selectedLocation.location.distance,
+        creator: $rootScope.auth.$getAuth(),
+        attendees: [$scope.currentUser]
+      });
       $cordovaProgress.showAnnular(true, 3000);
       $state.go('games.list');
     });
@@ -60,7 +61,6 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
   $rootScope.position = {};
 
   $ionicPlatform.ready(function() {
-    console.log('location');
     var posOptions = {timeout: 50000, enableHighAccuracy: false};
     $cordovaGeolocation
     .getCurrentPosition(posOptions)

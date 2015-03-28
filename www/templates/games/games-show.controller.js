@@ -5,23 +5,20 @@ function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialS
   $scope.temperature = null;
   $scope.notAttending = false;
 
-  var Games = Parse.Object.extend("game");
-  var query = new Parse.Query(Games);
-  query.equalTo('objectId', $state.params.gameId);
-  query.include("attendees.pointer");
-  query.first({
-    success: function(game) {
-      $scope.game = game;
-      drawMap($scope.game);
-      getWeather($scope.game);
-      for (var n in game.attributes.attendees) {
-        if (lodash.isMatch(game.attributes.attendees[n], { 'id': $scope.user.id }) === false) {
-          $scope.notAttending = true;
-        } else {
-          $scope.notAttending = false;
-        }
-      }
-    }
+  console.log('gameId...', $state.params.gameId);
+
+  var ref = new Firebase("https://glaring-torch-7897.firebaseio.com/games/" + $state.params.gameId);
+  ref.on("child_added", function(game) {
+    $scope.game = game.val();
+    drawMap($scope.game);
+    getWeather($scope.game);
+    // for (var n in game.attributes.attendees) {
+    //   if (lodash.isMatch(game.attributes.attendees[n], { 'id': $scope.user.id }) === false) {
+    //     $scope.notAttending = true;
+    //   } else {
+    //     $scope.notAttending = false;
+    //   }
+    // }
   });
 
   $scope.goBack = function() {
@@ -29,7 +26,7 @@ function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialS
   };
 
   $scope.share = function() {
-    var message = "Let's play on " + moment($scope.game.attributes.date).format('dddd') + " @ " + $scope.game.attributes.nameLocation + ", Check in at scrimmagr://games?" + $scope.game.id + " #scrimmagr";
+    var message = "Let's play on " + moment.unix($scope.game.day).format('dddd') + " @ " + $scope.game.name + ", Check in at scrimmagr://games?" + $scope.game.$id + " #scrimmagr";
     $cordovaSocialSharing
     .share(message, "It's game time!")
     .then(function(result) {});
@@ -39,23 +36,23 @@ function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialS
     $state.go('users.show', {userId: userId});
   };
 
-  $scope.attend = function() {
-    $scope.game.attributes.attendees.push({"__type":"Pointer","className":"_User","objectId":$scope.user.id});
-    console.log($scope.game.attributes.attendees);
-    var Game = Parse.Object.extend('game');
-    var game = new Game();
-    game.id = $scope.game.id;
-    game.set('attendees', $scope.game.attributes.attendees);
-    game.save(null, {
-      success: function(game) {
-        $scope.notAttending = false;
-        $state.go($state.$current, null, { reload: true });
-      }
-    });
-  };
+  // $scope.attend = function() {
+  //   $scope.game.attributes.attendees.push({"__type":"Pointer","className":"_User","objectId":$scope.user.id});
+  //   console.log($scope.game.attributes.attendees);
+  //   var Game = Parse.Object.extend('game');
+  //   var game = new Game();
+  //   game.id = $scope.game.id;
+  //   game.set('attendees', $scope.game.attributes.attendees);
+  //   game.save(null, {
+  //     success: function(game) {
+  //       $scope.notAttending = false;
+  //       $state.go($state.$current, null, { reload: true });
+  //     }
+  //   });
+  // };
 
   function getWeather(game) {
-    var day = moment(game.attributes.gameDay).format('MMDD');
+    var day = moment(game.day).format('MMDD');
     // $http.get('http://api.wunderground.com/api/f072e1fa016ca1ac/planner_' + day + day + '/q/CA/San_Francisco.json')
     // .then(function(response) {
     //   $scope.temperature = response.data.trip;
@@ -63,7 +60,7 @@ function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialS
   }
 
   function drawMap(game) {
-    var myLatlng = new google.maps.LatLng(game.attributes.geoLocation.latitude, game.attributes.geoLocation.longitude);
+    var myLatlng = new google.maps.LatLng(game.geopoint.lat, game.geopoint.lng);
 
     var mapOptions = {
       disableDefaultUI: true,
@@ -85,7 +82,7 @@ function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialS
     var marker = new google.maps.Marker({
       position: myLatlng,
       map: map,
-      title: game.attributes.nameLocation
+      title: game.name
     });
 
     google.maps.event.addListener(marker, 'click', function() {
