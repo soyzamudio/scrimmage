@@ -46,14 +46,12 @@ function($ionicPlatform, $rootScope, $state, $cordovaGeolocation, $window, $fire
     }
   });
 
-  $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
-    $rootScope.ref = new Firebase("https://glaring-torch-7897.firebaseio.com");
-    $rootScope.auth = $firebaseAuth($rootScope.ref);
-    if (!$rootScope.auth.$getAuth()) {
-      $state.transitionTo("login");
-      event.preventDefault();
-    }
-  });
+  $rootScope.ref = new Firebase("https://glaring-torch-7897.firebaseio.com");
+  $rootScope.auth = $firebaseAuth($rootScope.ref);
+  if (!$rootScope.auth.$getAuth()) {
+    $state.transitionTo("login");
+    event.preventDefault();
+  }
 
   if ($window.localStorage.external_load) {
     var params = $window.localStorage.external_load.split('//')[1].split('?');

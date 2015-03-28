@@ -1,14 +1,16 @@
 angular.module('scrimmagr')
-.controller('GamesListCtrl', ['$rootScope', '$scope', '$state', '$cordovaDialogs', 'moment',
-function($rootScope, $scope, $state, $cordovaDialogs, moment) {
+.controller('GamesListCtrl', ['$rootScope', '$scope', '$state', '$cordovaDialogs', 'moment', '$firebaseObject',
+function($rootScope, $scope, $state, $cordovaDialogs, moment, $firebaseObject) {
 
   $scope.games = [];
 
   var ref = new Firebase("https://glaring-torch-7897.firebaseio.com/games");
-  ref.on("child_added", function(game) {
-    $scope.game = game.val();
-    $scope.game.formattedDay = moment.unix(game.val().day).format('dddd, MMM Do @ h:mmA');
-    $scope.games.push($scope.game);
+  ref.on("value", function(games) {
+    $scope.games = games.val();
+    console.log($scope.games);
+    // $scope.game.id = game.V.path.o[1];
+    // $scope.game.formattedDay = moment.unix(game.val().day).format('dddd, MMM Do @ h:mmA');
+    // $scope.games.push($scope.game);
   });
 
   $scope.goToCreate = function() {

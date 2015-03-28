@@ -1,24 +1,23 @@
 angular.module('scrimmagr')
-.controller('GamesShowCtrl', ['$scope', '$state', '$ionicHistory', '$ionicLoading', '$compile', '$cordovaSocialSharing', 'moment', '$http', 'lodash',
-function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialSharing, moment, $http, lodash) {
-  $scope.user = Parse.User.current();
+.controller('GamesShowCtrl', ['$rootScope', '$scope', '$state', '$ionicHistory', '$ionicLoading', '$compile', '$cordovaSocialSharing', 'moment', '$http', 'lodash', '$cordovaProgress',
+function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialSharing, moment, $http, lodash, $cordovaProgress) {
   $scope.temperature = null;
   $scope.notAttending = false;
 
-  console.log('gameId...', $state.params.gameId);
-
   var ref = new Firebase("https://glaring-torch-7897.firebaseio.com/games/" + $state.params.gameId);
-  ref.on("child_added", function(game) {
+  ref.on("value", function(game) {
     $scope.game = game.val();
     drawMap($scope.game);
     getWeather($scope.game);
-    // for (var n in game.attributes.attendees) {
-    //   if (lodash.isMatch(game.attributes.attendees[n], { 'id': $scope.user.id }) === false) {
-    //     $scope.notAttending = true;
-    //   } else {
-    //     $scope.notAttending = false;
-    //   }
-    // }
+    for (var n in $scope.game.attendees) {
+      if (lodash.isMatch($scope.game.attendees[n], { 'email': $rootScope.auth.$getAuth().facebook.email }) === false) {
+        $scope.notAttending = true;
+        console.log('true');
+      } else {
+        $scope.notAttending = false;
+        console.log('false');
+      }
+    }
   });
 
   $scope.goBack = function() {
@@ -36,20 +35,20 @@ function($scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialS
     $state.go('users.show', {userId: userId});
   };
 
-  // $scope.attend = function() {
-  //   $scope.game.attributes.attendees.push({"__type":"Pointer","className":"_User","objectId":$scope.user.id});
-  //   console.log($scope.game.attributes.attendees);
-  //   var Game = Parse.Object.extend('game');
-  //   var game = new Game();
-  //   game.id = $scope.game.id;
-  //   game.set('attendees', $scope.game.attributes.attendees);
-  //   game.save(null, {
-  //     success: function(game) {
-  //       $scope.notAttending = false;
-  //       $state.go($state.$current, null, { reload: true });
-  //     }
-  //   });
-  // };
+  $scope.attend = function() {
+    var uid = $rootScope.auth.$getAuth().uid;
+    var userRef = new Firebase("https://glaring-torch-7897.firebaseio.com/users/" + uid);
+    userRef.on("value", function(user) {
+      $scope.game.attendees.push(user.val());
+      delete $scope.game.attendees[0].$$hashKey;
+      console.log('attendees...', $scope.game.attendees);
+      ref.update({
+        attendees: $scope.game.attendees
+      });
+      $scope.notAttending = false;
+      $scope.$apply();
+    });
+  };
 
   function getWeather(game) {
     var day = moment(game.day).format('MMDD');

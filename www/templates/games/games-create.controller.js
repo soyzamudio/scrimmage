@@ -30,7 +30,7 @@ function($rootScope, $scope, $state, $ionicPlatform, $ionicHistory, $cordovaGeol
         address: $scope.selectedLocation.location.formattedAddress,
         day: moment($scope.selectedTime).unix(),
         distance: $scope.selectedLocation.location.distance,
-        creator: $rootScope.auth.$getAuth(),
+        creator: $scope.currentUser,
         attendees: [$scope.currentUser]
       });
       $cordovaProgress.showAnnular(true, 3000);
