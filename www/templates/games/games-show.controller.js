@@ -1,6 +1,6 @@
 angular.module('scrimmagr')
-.controller('GamesShowCtrl', ['$rootScope', '$scope', '$state', '$ionicHistory', '$ionicLoading', '$compile', '$cordovaSocialSharing', 'moment', '$http', 'lodash', '$cordovaProgress', '$firebaseObject',
-function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialSharing, moment, $http, lodash, $cordovaProgress, $firebaseObject) {
+.controller('GamesShowCtrl', ['$rootScope', '$scope', '$state', '$ionicHistory', '$ionicLoading', '$compile', '$cordovaSocialSharing', 'moment', '$http', 'lodash', '$cordovaProgress', '$firebaseObject', '$ionicModal',
+function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $cordovaSocialSharing, moment, $http, lodash, $cordovaProgress, $firebaseObject, $ionicModal) {
   $scope.temperature = null;
   $scope.notAttending = false;
 
@@ -9,7 +9,7 @@ function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $co
   game.$loaded(function(game) {
     $scope.game = game;
     drawMap($scope.game);
-    // getWeather($scope.game);
+    getWeather($scope.game);
     for (var n in $scope.game.attendees) {
       if (lodash.isMatch($scope.game.attendees[n], { 'email': $rootScope.auth.$getAuth().facebook.email }) === false) {
         $scope.notAttending = true;
@@ -32,22 +32,26 @@ function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $co
     .then(function(result) {});
   };
 
-  //
-  // $scope.attend = function() {
-  //   var uid = $rootScope.auth.$getAuth().uid;
-  //   var userRef = new Firebase("https://glaring-torch-7897.firebaseio.com/users/" + uid);
-  //   userRef.on("value", function(user) {
-  //     $scope.game.attendees.push(user.val());
-  //     delete $scope.game.attendees[0].$$hashKey;
-  //     console.log('attendees...', $scope.game.attendees);
-  //     ref.update({
-  //       attendees: $scope.game.attendees
-  //     });
-  //     $scope.notAttending = false;
-  //     $scope.$apply();
-  //   });
-  // };
-  //
+  $scope.attendGame = function() {
+      console.log('in attend');
+      var uid = $rootScope.auth.$getAuth().uid;
+      console.log('uid...', uid);
+      var userRef = new Firebase("https://glaring-torch-7897.firebaseio.com/users/" + uid);
+      userRef.on("value", function(user) {
+        $scope.game.attendees.forEach(function(e) {
+          delete e.$$hashKey
+        });
+        console.log($scope.game.attendees);
+        $scope.game.attendees.push(user.val());
+        console.log($scope.game.attendees);
+        ref.update({
+          attendees: $scope.game.attendees
+        });
+        $scope.notAttending = false;
+        $scope.$apply();
+      });
+  }
+
   function getWeather(game) {
     var day = moment(game.day).format('MMDD');
     $http.get('http://api.wunderground.com/api/f072e1fa016ca1ac/planner_' + day + day + '/q/CA/San_Francisco.json')
@@ -88,4 +92,27 @@ function($rootScope, $scope, $state, $ionicHistory, $ionicLoading, $compile, $co
 
     $scope.map = map;
   }
-}]);
+
+  $scope.randomize = function() {
+    $scope.teamA = $scope.game.attendees;
+    $scope.teamA = lodash.shuffle($scope.teamA);
+    var half_length = Math.ceil($scope.teamA.length / 2);
+    $scope.teamB = $scope.teamA.splice(0, half_length);
+    console.log('A', $scope.teamA);
+    console.log('B', $scope.teamB);
+  }
+
+  $ionicModal.fromTemplateUrl('templates/games/randomize.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+}])
+.filter('formatTimeShow', function() {
+  return function(input) {
+    if(!input) return;
+    return moment.unix(input).format('dddd @ h:mmA');
+  };
+});

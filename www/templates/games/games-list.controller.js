@@ -6,7 +6,6 @@ function($rootScope, $scope, $state, $cordovaDialogs, moment, $firebaseArray) {
   var games = $firebaseArray(ref);
   games.$loaded(function(list) {
     $scope.games = list;
-    console.log(list);
   });
   // ref.on("value", function(games) {
   //   $scope.games = games.val();

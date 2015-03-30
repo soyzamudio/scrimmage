@@ -3,17 +3,17 @@
     <div class="buttons">
       <a style="color: white;" class="button button-icon icon ion-ios-arrow-left" ng-click='goBack()'></a>
     </div>
-    <h1 class="title view-title">Game</h1>
+    <h1 class="title view-title">{{game.day | formatTimeShow}}</h1>
     <div class="buttons">
-      <a href="" style="color: white" class="button button-icon icon ion-ios-upload-outline" ng-click="share()"></a>
+      <a style="color: white" class="button button-icon icon ion-person-stalker" ng-click='modal.show()'></a>
+      <a style="color: white" class="button button-icon icon ion-ios-upload-outline" ng-click="share()"></a>
     </div>
   </ion-header-bar>
   <ion-content class='padding'>
-    <button class="button button-outline button-block icon-left ion-ios-location-outline" ng-if='notAttending' ng-click='attend()'>Check in!</button>
 
     <div class="list card">
       <div class="item">
-        <h2>{{game.name}}</h2>
+        <h2>@{{game.name}}</h2>
         <h2 class='grey-text'>{{game.address[0]}}</h2>
         <h2 class='grey-text'>{{game.address[1]}}</h2>
       </div>
@@ -47,12 +47,24 @@
       </div>
     </div>
 
-    <div class="list card" ng-repeat='attendee in game.attendees'>
-      <div class="item item-avatar" ng-click='goToUser(attendee.$id)'>
-        <img ng-src='{{attendee.picture}}'>
-        <h2>{{attendee.name}}<h2>
-        <p>{{attendee.email}}</p>
+    <button class='button button-outline button-block icon-left ion-ios-location-outline' ng-if='notAttending' ng-click='attendGame()'>Check in!</button>
+
+    <div class="list">
+
+      <div class="item item-divider" style='color: #f1f1f1; background: transparent; border: none; text-align: center;'>
+        <i class="icon ion-ios-people"></i> {{game.attendees.length}} player(s) going
       </div>
+
+      <div class="list card" ng-repeat='attendee in game.attendees'>
+        <div class="item item-avatar">
+          <img ng-src='{{attendee.picture}}'>
+          <h2>{{attendee.name}}<h2>
+          <p>{{attendee.email}}</p>
+        </div>
+      </div>
+
     </div>
+
+
   </ion-content>
 </ion-view>

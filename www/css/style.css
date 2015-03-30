@@ -6,8 +6,27 @@ h2 {
   font-family: "MoonBold" !important;
 }
 
+/* Login Page */
+
+#logo > h1 {
+  font-family: 'Coffee';
+  color: #f1f1f1;
+  font-size: 4em;
+  letter-spacing: .04em;
+  text-align: center;
+  padding-top: 150px;
+  margin-bottom: 0px;
+}
+
+#subtitle {
+  font-family: 'Open Sans', sans-serif;
+  margin-top: -15px;
+  padding-bottom: 110%;
+  text-align: right;
+}
+
 .background-gif {
-  background:  url(../img/video.gif) no-repeat -600px center fixed;
+  background:  url(../img/video2.gif) no-repeat -400px center fixed;
   position: fixed;
   right: 0px;
   bottom: 0px;
@@ -94,7 +113,7 @@ h2 {
   font-family: "MoonBold";
   font-size: 1.2em;
   padding-top: 2px;
-  border-radius: 0px;
+  border-radius: 2px;
 }
 
 .button-facebook.activated {

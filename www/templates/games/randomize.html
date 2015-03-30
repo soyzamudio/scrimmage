@@ -1,0 +1,28 @@
+<ion-modal-view class='view-dark'>
+  <ion-header-bar class='bar-scrimmage'>
+    <div class="buttons">
+      <a style="color: white;" class="button button-icon icon ion-ios-close-empty" ng-click='modal.hide()'></a>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <button class='button button-outline button-block icon-left ion-ios-football' ng-click='randomize()'>Randomize Players</button>
+    <div class="row">
+
+      <div class="col col-50" style='text-align: center;'>
+        <div class="item item-divider" style='color: #f1f1f1; background: transparent; border: none; text-align: center;'>
+          <i class="button-icon icon ion-tshirt-outline"></i>
+        </div>
+
+        <div class="item" ng-repeat='player in teamA'>{{player.name}}</div>
+      </div>
+
+      <div class="col col-50" style='text-align: center;'>
+        <div class="item item-divider" style='color: #f1f1f1; background: transparent; border: none; text-align: center;'>
+          <i class="button-icon icon ion-tshirt"></i>
+        </div>
+
+        <div class="item" ng-repeat='player in teamB'>{{player.name}}</div>
+      </div>
+    </div>
+  </ion-content>
+</ion-modal-view>
